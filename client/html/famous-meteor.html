@@ -1,5 +1,5 @@
 <head>
-  <title>famous-meteor</title>
+  <title>famousTests</title>
 </head>
 
 <body>
@@ -10,10 +10,8 @@
 </body>
 
 <template name="coreSurface">
-
 	{{>multiSurface}}
 </template>
-
 
 <template name="multiSurface">
 	{{#each sampleSet}}
@@ -21,12 +19,10 @@
 	{{/each}}
 </template>
 <template name="innerSurface">
-
 </template>
 
 <template name="addRecord">
-	
-<input style="float:left" class="rName" placeholder="Record Name"/><textarea class="rContent" placeholder="Record Content"></textarea>
-
+<input style="float:left" class="rName" placeholder="Record Name"/>
+<textarea class="rContent" placeholder="Record Content"></textarea>
 <button style="float:right;" onClick="addRecord();">Add</button>
 </template>
