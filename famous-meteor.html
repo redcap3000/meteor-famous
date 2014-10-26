@@ -1,0 +1,14 @@
+<head>
+  <title>famous-meteor</title>
+</head>
+
+<body>
+	{{>gridExample}}
+</body>
+
+<template name="gridExample">
+	{{#each sampleSet}}
+		{{>innerSurface}}
+	{{/each}}
+</template>
+<template name="innerSurface"></template>
