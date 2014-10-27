@@ -40,7 +40,10 @@ Meteor.startup(function(){
 	Surface = famous.core.Surface,
 	StateModifier = famous.modifiers.StateModifier,
 	GridLayout = famous.views.GridLayout;
-	HeaderFooterLayout = famous.views.HeaderFooterLayout;
+	HeaderFooterLayout = famous.views.HeaderFooterLayout,
+	Transform = famous.core.Transform;
+	Easing = famous.transitions.Easing;
+
 	// this is used to push values from innerSurface to be
 	// passed to .sequenceFrom for the grid
 	Meteor.subscribe("gridExample",function(err,result){
@@ -71,9 +74,9 @@ Template.multiSurface.rendered = function(){
 			}
 		}));
 	layout.content.add(new Surface({
-		content : "Content",
+		
 		properties :{
-			backgroundColor :'#fa5c4f',
+			backgroundColor :'white',
 			lineHeight: '400px',
 			textAlign: 'center'
 		}
@@ -89,6 +92,14 @@ Template.multiSurface.rendered = function(){
 		    }
 		}));
 	}
+		var fCon = $(".famous-container");
+	if(fCon.length > 1){
+		//console.log(fCon.length);
+		for (var i = 0; i <= fCon.length-2; i++) {
+			fCon[i].remove();
+
+		}
+	}
 	if( typeof context != "undefined" && typeof theSurfaces != "undefined"){
 		// code from code academy... sort of works but not too excited about it..
 		// need to do some on window change reloading...
@@ -96,15 +107,29 @@ Template.multiSurface.rendered = function(){
 			    dimensions: [2, 8]
 			});
 			theSurfaces = [];
+			var mod = new StateModifier({
+		
+//				align: [0,1]
+			});
+
+			mod.setTransform(
+			    Transform.scale(.9, .9,.9),
+			    { duration : 1000, curve: Easing.outElastic }
+			);
+		
+			// so figure out if we are removing something and then change the transition and
+			// reset self.. eventually
 			grid.sequenceFrom(theSurfaces);
 			// it doesnt want to do this here??
 			sampleSet.find().map(function(o){
 				var s = new Surface({
 					size : [undefined,undefined],
+					opacity: 1,
 					properties : {color:"red",backgroundColor:"black"},
 					content : o.name
 				}
 				);
+				
 				if(s){
 					// storing these here because they lose scope in the on function
 					var theContent = o.content, theName = o.name, theId = o._id;
@@ -137,20 +162,25 @@ Template.multiSurface.rendered = function(){
 					console.log('could not create surface');
 				}
 			});
-		layout.content.add(grid);
+
+	
+				
+		layout.content.add(mod).add(grid);
 		context.add(layout);
 	}else{
-		context.add(layout);
+		var mod = new StateModifier({
+		
+//				align: [0,1]
+			});
+
+			mod.setTransform(
+			    Transform.scale(1, 1,1),
+			    { duration : 1000, curve: Easing.inElastic }
+			);
+		context.add(mod).add(layout);
 	}
 	// check if any containers exist?
-	var fCon = $(".famous-container");
-	if(fCon.length > 1){
-		//console.log(fCon.length);
-		for (var i = 0; i <= fCon.length-2; i++) {
-			fCon[i].remove();
 
-		}
-	}
 
 };
 
@@ -250,6 +280,8 @@ Template.innerSurface.created = function(){
 				theSurfaces = [];
 			}
 			theSurfaces.push(s);
+			Template.multiSurface.rendered();
+			//add to context here too?
 		}else{
 			console.log('could not create surface');
 		}
