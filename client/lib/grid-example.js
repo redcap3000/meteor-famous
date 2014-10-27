@@ -64,7 +64,7 @@ Meteor.startup(function(){
 		var s = new Surface({
 					size : [undefined,undefined],
 					properties : defaultProp,
-					content : content
+					content : '<h2>'+name+'</h2>'
 				}
 				);
 		if(s){
@@ -76,20 +76,20 @@ Meteor.startup(function(){
 				// most session vars are strings
 				if(!Session.equals("gridSelect",_id)){
 					// add a link to allow for item deletion?
-					this.setContent(content + '<button onClick="sampleSet.remove({_id :\''+ _id +'\'});">Remove</button>');
+					this.setContent('<h2>'+name+'</h2>' + content + '<button onClick="sampleSet.remove({_id :\''+ _id +'\'});">Remove</button>');
 					// background color check ...
 					if(this.properties.backgroundColor != "orange"){
 						Session.set("gridSelect",_id);
 						this.setProperties(defaultSelectedProp);
 					}
 					else{
-						this.setContent(name);
+						this.setContent('<h2>'+name+'</h2>');
 						this.setProperties(defaultProp);
 						Session.set("gridSelect",undefined);
 					}
 				}else{
 					// restore 'defaults somehow...'
-					this.setContent(name);
+					this.setContent('<h2>'+name+'</h2>');
 					this.setProperties(defaultProp);
 					// clear the currently selected grid
 					Session.set("gridSelect",undefined);
@@ -149,14 +149,23 @@ Template.multiSurface.rendered = function(){
 			footerSize: 50
 		});
 
-	layout.header.add(new Surface({
-		content: "Header",
+		var modifier = new Modifier();
+	var opacityState = new Transitionable(0);
+
+	layout.header.add(modifier).add(new Surface({
+		content: $("#header").html(),
 		properties:{
 			backgroundColor: 'gray',
 			lineHeight: "100px",
 			textAlign: "center"
 		}
 		}));
+	modifier.opacityFrom(opacityState);
+	opacityState.set(
+	    1,
+	    {curve : 'linear', duration : 500},
+	    function(){ console.log('header animation finished!'); }
+	);
 	layout.content.add(new Surface({
 		properties :{
 			backgroundColor :'white',
@@ -165,8 +174,10 @@ Template.multiSurface.rendered = function(){
 		}
 	}));
 	// get inner html from onscreen??
+	var modifierF = new Modifier();
+	var opacityStateF = new Transitionable(0);
 	if(typeof layout.footer.content == "undefined" || layout.footer.content == ''){
-		layout.footer.add(new Surface({
+		layout.footer.add(modifierF).add(new Surface({
 		    content: $("#addRecord").html(),
 		    properties: {
 		        backgroundColor: 'gray',
@@ -175,6 +186,13 @@ Template.multiSurface.rendered = function(){
 		    }
 		}));
 	}
+	modifierF.opacityFrom(opacityStateF);
+	opacityStateF.set(
+	    1,
+	    {curve : 'linear', duration : 600},
+	    function(){ console.log('footer animation finished!'); }
+	);
+
 	var fCon = $(".famous-container");
 	if(fCon.length > 1){
 		for (var i = 0; i <= fCon.length-2; i++) {
@@ -182,6 +200,7 @@ Template.multiSurface.rendered = function(){
 
 		}
 	}
+	// cant use the same modifier? hmmm be careful here...
 	var modifier = new Modifier();
 	var opacityState = new Transitionable(0);
 	if( typeof context != "undefined" && typeof theSurfaces != "undefined"){
@@ -208,7 +227,7 @@ Template.multiSurface.rendered = function(){
 		modifier.opacityFrom(opacityState);
 		opacityState.set(
 		    1,
-		    {curve : 'linear', duration : 500},
+		    {curve : 'linear', duration : 400},
 		    function(){ console.log('animation finished!'); }
 		);
 	}else{

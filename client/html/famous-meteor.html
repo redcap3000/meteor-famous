@@ -4,8 +4,13 @@
 </head>
 
 <body>
+<div id="header" style="display:none;">
+	<h2>Famo-meteor</h2>
+</div>	
 <div id="addRecord" style="display:none;">
-	{{>addRecord}}
+	<input style="float:left" class="rName" placeholder="Record Name"/>
+	<textarea class="rContent" placeholder="Record Content"></textarea>
+	<button style="float:left;" onClick="addRecord();">Add</button>
 </div>
 {{>multiSurface}}
 </body>
@@ -16,10 +21,4 @@
 	{{/each}}
 </template>
 <template name="innerSurface">
-</template>
-
-<template name="addRecord">
-<input style="float:left" class="rName" placeholder="Record Name"/>
-<textarea class="rContent" placeholder="Record Content"></textarea>
-<button style="float:right;" onClick="addRecord();">Add</button>
 </template>
