@@ -177,14 +177,15 @@ Template.multiSurface.rendered = function(){
 	var modifierF = new Modifier();
 	var opacityStateF = new Transitionable(0);
 	if(typeof layout.footer.content == "undefined" || layout.footer.content == ''){
-		layout.footer.add(modifierF).add(new Surface({
+		var footerSurface = new Surface({
 		    content: $("#addRecord").html(),
 		    properties: {
 		        backgroundColor: 'gray',
 		        lineHeight: "50px",
 		        textAlign: "center"
 		    }
-		}));
+		});
+		layout.footer.add(modifierF).add(footerSurface);
 	}
 	modifierF.opacityFrom(opacityStateF);
 	opacityStateF.set(
@@ -193,13 +194,7 @@ Template.multiSurface.rendered = function(){
 	    function(){ console.log('footer animation finished!'); }
 	);
 
-	var fCon = $(".famous-container");
-	if(fCon.length > 1){
-		for (var i = 0; i <= fCon.length-2; i++) {
-			fCon[i].remove();
-
-		}
-	}
+	
 	// cant use the same modifier? hmmm be careful here...
 	var modifier = new Modifier();
 	var opacityState = new Transitionable(0);
@@ -232,6 +227,15 @@ Template.multiSurface.rendered = function(){
 		);
 	}else{
 		context.add(modifier).add(layout);
+	}
+
+	var fCon = $(".famous-container");
+	if(fCon.length > 1){
+		for (var i = 0; i <= fCon.length-2; i++) {
+			console.log('removed a famo container');
+			fCon[i].remove();
+
+		}
 	}
 };
 
